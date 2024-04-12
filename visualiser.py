@@ -52,7 +52,7 @@ def audio_to_image(name, mood):
         bbox_inches="tight",
         transparent=True,
         pad_inches=0,
-        dpi=300
+        dpi=150
     )
     # plt.show()
 

@@ -1,0 +1,3 @@
+SVM
+CNN 
+Logistic regression

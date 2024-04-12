@@ -7,7 +7,7 @@ ytmusic = YTMusic()
 moods = ytmusic.get_mood_categories()
 # pprint.pprint(moods)
 # we'are using "moods and moments" instead of "genres"
-for i in moods["Moods & moments"]:
+for i in moods["Genres"]:
     print(i)
 # Just printing the moods like "chill". You will have to hardcode the playlist dict
 
