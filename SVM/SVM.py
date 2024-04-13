@@ -3,10 +3,9 @@ from skimage.io import imread
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import StandardScaler
 from sklearn import svm
+import joblib
 
 # Sleep party sad
 cats = ["sad", "sleep", "Party"]
@@ -15,7 +14,6 @@ def load_data() -> list:
     "load data from the Output FIles folder, and return inoput arr and their indices in output arr"
     dir = "OutputFiles/Moods and Moments"
     Categories = os.listdir(dir)
-    Categories.remove("imageDataset")
 
     input_arr = []
     output_arr = []
@@ -53,6 +51,8 @@ def generate_model(input_arr, output_arr)-> list:
         x, y, test_size=0.2, random_state=42
     )
 
+    print(X_train)
+
     # lets avoid scaling for now, since we already scaled frequencies to db once
     # scaler = StandardScaler()
     # X_train_scaled = scaler.fit_transform(X_train)
@@ -76,8 +76,11 @@ def generate_model(input_arr, output_arr)-> list:
     test_accuracy = accuracy_score(y_test, y_pred)
     # print("Accuracy testing:", test_accuracy)  # 0.766666
 
+    joblib.dump(model, "SVM.pkl")
+
     del model, df, x, y, X_train, X_test, y_train, y_test
 
+    print(train_accuracy, test_accuracy)
     return train_accuracy, test_accuracy
 
 if __name__=="__main__":
