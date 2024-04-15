@@ -3,9 +3,10 @@ from skimage.io import imread
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix
 import joblib
-
-cats = ["sad", "sleep", "Party"]
+import matplotlib.pyplot as plt
 
 
 def load_data() -> list:
@@ -17,8 +18,6 @@ def load_data() -> list:
     output_arr = []
 
     for i in Categories:
-        if i not in cats:
-            continue
         print("Loading category: ", i)
         path = os.path.join(dir, i)
 
@@ -37,31 +36,41 @@ def load_data() -> list:
     return input_arr, output_arr
 
 
-input, out = load_data()
-
-X_train, X_test, y_train, y_test = train_test_split(
+def generate_model(input, out):
+    """generates the model, saves to NeuralNetwork directory. Also shows the confusion matrix"""
+    X_train, X_test, y_train, y_test = train_test_split(
     input, out, test_size=0.25, random_state=16
 )
 
-model = MLPClassifier(
+    model = MLPClassifier(
     solver="sgd", alpha=0.001, hidden_layer_sizes=(20,50), random_state=42
 )
 
-# fit the model with data
-model.fit(X_train, y_train)
+    # fit the model with data
+    model.fit(X_train, y_train)
 
-# Make predictions on the training set
-y_pred = model.predict(X_train)
+    # Make predictions on the training set
+    y_pred = model.predict(X_train)
 
-# Calculate accuracy
-train_accuracy = accuracy_score(y_train, y_pred)
-# print("Accuracy training:", train_accuracy)  # 1.0
+    # Calculate accuracy
+    train_accuracy = accuracy_score(y_train, y_pred)
+    # print("Accuracy training:", train_accuracy)  # 1.0
 
-# Make predictions on the test set
-y_pred = model.predict(X_test)
+    # Make predictions on the test set
+    y_pred = model.predict(X_test)
 
-# Calculate accuracy
-test_accuracy = accuracy_score(y_test, y_pred)
+    cm = confusion_matrix(y_test, y_pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+    disp.plot()
+    plt.show()
 
-print(train_accuracy, test_accuracy)
-joblib.dump(model, "NNmodel.pkl")
+    # Calculate accuracy
+    test_accuracy = accuracy_score(y_test, y_pred)
+
+    print(train_accuracy, test_accuracy)
+    joblib.dump(model, "NeuralNetwork/NN.pkl", compress=3)
+
+
+if __name__ == "__main__":
+    x, y = load_data()
+    generate_model(x, y)

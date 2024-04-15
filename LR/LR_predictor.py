@@ -5,7 +5,7 @@ import os
 
 Categories = os.listdir("OutputFiles/Moods and Moments")
 
-model = joblib.load("SVM/SVM.pkl")
+model = joblib.load("LR/LR.pkl")
 
 image = resize(imread("test.png"), (744, 554)).flatten().reshape(1, -1)
 

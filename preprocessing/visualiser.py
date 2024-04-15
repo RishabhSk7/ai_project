@@ -4,8 +4,8 @@ import librosa
 import matplotlib.pyplot as plt
 import numpy as np
 
-in_loc = "Files/Moods and Moments/"
-out_loc = "OutputFiles/Moods and Moments/"
+in_loc = "../Files/Moods and Moments/"
+out_loc = "../OutputFiles/Moods and Moments/"
 
 def audio_to_image(name, mood):
     """converts wav audio files with PCM encoding to images in hsv format"""

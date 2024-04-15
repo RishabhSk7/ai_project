@@ -15,7 +15,6 @@ gc.set_threshold(0)
 
 dir = "OutputFiles/Moods and Moments"
 Categories = os.listdir(dir)
-Categories.remove("imageDataset")
 combination = []
 
 
@@ -40,7 +39,7 @@ except json.decoder.JSONDecodeError:
 
 
 # creating combinations of all possible for size 2 to n
-for i in range(2, len(Categories)):
+for i in range(8, len(Categories)):
     combination.append(list(itertools.combinations(Categories, i)))
 
 results = {}
