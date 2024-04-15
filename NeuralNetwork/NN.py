@@ -45,16 +45,16 @@ def generate_model(input, out):
 
     model = MLPClassifier(
     solver="sgd", alpha=0.001, hidden_layer_sizes=(20,50), random_state=42
-)
+    )
 
     # scaling
-    #NOTE I am stupid, should have used it earlier
-    #accuracy jumped from 0.17 to 0.79
+    # NOTE I am stupid, should have used it earlier
+    # accuracy jumped from 0.17 to 0.79
     scaler = StandardScaler()
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
     X_test = scaler.transform(X_test)
-    #consider using pipeline for scaling
+    # consider using pipeline for scaling
 
     # fit the model with data
     model.fit(X_train, y_train)
