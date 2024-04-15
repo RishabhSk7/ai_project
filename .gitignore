@@ -1,8 +1,9 @@
-/OutputFiles
-/Files
-/audio_file
-/images
-/.trash
-/.obsidian
-/class
+OutputFiles
+Files
+audio_file
+images
+.trash
+.obsidian
+class
 __pycache__/
+.vscode/
