@@ -13,7 +13,7 @@ The size of an audio frame is **calculated by multiplying the sample size in byt
 
 ### MP3 
 MP3 is a popular format that stores audio data in a lossy format, i.e., it trades of some details in data for lower memory usage.
-![[Pasted image 20240321200044.png]]
+
 Mp3 stores data in 4 steps:
 1. Divide audio singal into frames.
 2. Each sample passes through a fast Fourier transform (fft), after which a psychoacoustic model is applied.
