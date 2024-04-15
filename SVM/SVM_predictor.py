@@ -1,12 +1,24 @@
-import joblib
-from skimage.io import imread
-from skimage.transform import resize
 import os
+import io
+import joblib
+from PIL import Image
+import numpy as np
 
-Categories = os.listdir("OutputFiles/Moods and Moments")
 
-model = joblib.load("SVM/SVM.pkl")
+def predict(image: io.BytesIO):
+    "predict image data using neural model"
+    Categories = os.listdir("OutputFiles/Moods and Moments")
 
-image = resize(imread("test.png"), (744, 554)).flatten().reshape(1, -1)
+    model = joblib.load("SVM/SVM.pkl")
+    image = image.resize((744, 554))
 
-print(":", Categories[model.predict(image)[0]])
+    # Convert the resized image to a numpy array
+    image = np.array(image)
+
+    # Flatten and reshape the resized image
+    image = image.flatten().reshape(1, -1)
+    return Categories[model.predict(image)[0]]
+
+
+if __name__ == "__main__":
+    print(predict(Image.open("test/test.png")))

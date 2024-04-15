@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenreID'd - Identify Media Genre</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #fff;
+            padding-top: 50px;
+            margin-bottom: 100px;
+            /* Adjusted margin for footer */
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Indie Flower', cursive;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .container {
+            max-width: 800px;
+        }
+
+        .drop-zone {
+            border: 2px dashed #aaa;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .drop-zone.dragged {
+            border-color: #2196F3;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .sidebar {
+            right: 0px;
+            width: 300px;
+            height: 100vh;
+            background-color: #1e1e1e;
+            padding: 20px;
+            /* Adjusted border radius */
+            border-radius: 20px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+            /* Adjusted shadow */
+        }
+
+        .sidebar h3 {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar p {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar ul li a .material-icons {
+            margin-right: 10px;
+        }
+
+        .about-us {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #1e1e1e;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #ccc;
+            font-size: 14px;
+            /* Adjusted font size */
+        }
+        
+        .mainbody {
+            display: flex;
+        }
+        .select-wrapper input.select-dropdown {
+            color: #fff;
+            background-color: #333; 
+        }
+        .select-wrapper .caret {
+            color: #fff;
+        }
+        .dropdown-content li>span {
+            color: #fff; 
+        }
+        .dropdown-content li>span:hover {
+            background-color: #333;
+        }
+
+        @keyframes rotate {
+            0%{
+                transform: rotate(360deg);
+            }
+            100%{
+                transform: rotate(0deg);
+            }
+        }
+
+        #workingLoop {
+            animation: rotate 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+    
+
+    <div class="mainbody">
+        
+        <div class="container">
+            <h1>GenreID'd</h1>
+        
+            <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                <span id="drop-text">Click to Upload Media File</span>
+                <input type="file" id="file-input" accept="audio/*,.png" style="display: none;" />
+            </div>
+
+        <div class="input-field col s12">
+            <select style="display:block;" id = "selectModel">  <!-- idk why but materialise sets display of "select" to none -->
+                <option value="0" disabled selected>Choose Model</option>
+                <option value="MLP">MLP classifier</option>
+                <option value="LR">Logistic Regression</option>
+                <option value="SVM">SVM</option>
+            </select>
+        </div>
+
+        <div class="input-field col s12" style="display: flex; justify-content: center; align-items: center;">
+            <button class="btn waves-effect waves-light" onclick="uploadFile()">Make Prediction</button>
+            <i class="material-icons" id="workingLoop" style="margin-left: 10px;display: none;">loop</i>
+        </div>
+
+
+            <div class="result" id="result" style="text-align: center;">
+                <!-- Result here show -->
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <h3>GenreID'd</h3>
+            <p>An app to identify the genre of media files.</p>
+            <ul>
+                <li><a href="#"><i class="material-icons">description</i>Description</a></li>
+                <li><a href="#"><i class="material-icons">contact_mail</i>Contact</a></li>
+                <li><a href="https://github.com/yourusername"><i class="fab fa-github github-icon" 
+                    style="font-size: 25px;margin-right: 10px;"></i></i>GitHub</a></li>
+                <!-- Add more links as needed -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="about-us">
+        <h4>About Us</h4>
+        <p>GenreID'd is a project aimed at automatically identifying the genre of media files, whether it's audio or
+            image. Our system uses MLP, Logistic Regression and SVM models to provide accurate genre detection.</p>
+    </div>
+
+
+    <script>
+        var file=null;
+        const fileInput = document.getElementById('file-input');
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+        });
+
+        function uploadFile() {
+            const loop = document.getElementById("workingLoop");
+            loop.style.display = "block";
+
+            const formData = new FormData();
+            const select = document.getElementById("selectModel");
+
+            if (file==null && select.value == 0) {
+                alert("Please upload a file and select a model.");
+                return
+            }
+            formData.append('file', file);
+            formData.append('model', select.value);
+            console.log(formData);
+
+            fetch('http://127.0.0.1:5000/upload', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to upload file');
+                    }
+                    return response.text();
+                })
+                .then(responseData => {
+                    result = document.getElementById("result");
+                    loop.style.display = "none";
+                    result.innerHTML = "The file you uploaded likely belongs to: <b>" + responseData + "</b>";
+                })
+                .catch(error => {
+                    console.error('Error uploading file:', error.message);
+                });
+        }
+
+        document.getElementById('file-input').addEventListener('change', function (event) {
+            file = this.files[0];
+            const validTypes = ['audio/wav', 'audio/x-wav', 'audio/mpeg', 'audio/mp3', 'image/png'];    /* why x-wav? */
+
+            if (!validTypes.includes(file.type)) {
+                alert('Please select a valid file type (audio(wav, mp3) or PNG image).');
+                this.value = ''; // Reset file input value
+            } else {
+                // Proceed with file upload
+                console.log('File selected:', file);
+                const result = document.getElementById("drop-text");
+                result.textContent = "File selected.";
+            }
+        })
+    </script>
+
+</body>
+
+</html>

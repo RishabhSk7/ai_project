@@ -1,4 +1,3 @@
-import pprint
 import yt_dlp
 import os
 from ytmusicapi import YTMusic
@@ -17,16 +16,10 @@ input()
 ##NOTE DO NOT use music.youtube.com, instead use www.youtube.com
 playlists = {
     # "chill": "https://music.youtube.com/playlist?list=RDCLAK5uy_krbBs7P2iEb30IODyVbiOXWyhZtAIX9Uk",
-    # "commute": "https://music.youtube.com/playlist?list=RDCLAK5uy_l8ohbe556smHVTBGt3YcKCsrablXt_BXk",
-    # "energy boosters": "https://music.youtube.com/playlist?list=RDCLAK5uy_mAL8kVq6SS6BUekEyyKLOvq68v44mq6bE",
-    # "Feel good": "https://music.youtube.com/playlist?list=RDCLAK5uy_l4zXRAZ8rMBbXcICdxzbyQKSaRWRF_-cY",
     # "Party": "https://music.youtube.com/playlist?list=RDCLAK5uy_nlOMew8qv8HGXb9HbshuU1OgH3aL_JMKA",
-    # "romance": "https://music.youtube.com/playlist?list=RDCLAK5uy_mgEm8q7vw-VJ8DeKUOCZqKgileRj9GnQ4",
     # "sad": "https://music.youtube.com/playlist?list=RDCLAK5uy_le5uB3137WE9n3TxANc_r8T3YM8QJlUvo",
     # "sleep": "https://music.youtube.com/playlist?list=RDCLAK5uy_ldLj_raotpFCQGWiQ7L-Ag5GTbGOyjgRY",
     # "workout": "https://music.youtube.com/playlist?list=PL7W9LuUf6bFrxSIjYqny-ac12v6P_2bP8",
-    # "hiphop": "https://music.youtube.com/playlist?list=RDCLAK5uy_mhI-UjL9SLtUTF6iUhPqX4JB8L2SaN7xM"
-    "rock": "https://music.youtube.com/playlist?list=PL7pkSK1xbGD5lNtPEBhIl20MA1kmr8kry"
 }
 # have a dict of custom playlists, in format genre:url
 

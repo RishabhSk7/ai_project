@@ -1,26 +1,36 @@
 import os
+import io
+from typing import Union
 # from statistics import mean
 import librosa
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+sys.path.append("/home/Sk7/Documents/python/ai_project")
 
-in_loc = "../Files/Moods and Moments/"
-out_loc = "../OutputFiles/Moods and Moments/"
+global in_loc, out_loc
 
-def audio_to_image(name, mood):
+def audio_to_image(name: Union[io.BytesIO, str], mood:str="Only pass if visualising dataset", predicting:bool=False) -> Union[io.BytesIO, None]:
+    matplotlib.use("agg")
     """converts wav audio files with PCM encoding to images in hsv format"""
 
-    # your program will likely have crashed before, so you're starting again. Ensures you
-    # do not repeat the whole process
-    if os.path.isfile(out_loc+ mood + "/" + name + ".png"):
-        return None
-    
-    if name[:2]=="r ":      #removing songs that do not match vibe filtered via changing file names
-        return None
-    
-    print(name)
+    if not predicting:      #run if converting dataset
+        # your program will likely have crashed before, so you're starting again. Ensures you
+        # do not repeat the whole process
+        if os.path.isfile(out_loc+ mood + "/" + name + ".png"):
+            return None
 
-    y = librosa.load(in_loc+mood+"/"+name, mono=True, sr=44100)[0]
+        if name[:2]=="r ":      #removing songs that do not match vibe filtered via changing file names
+            return None
+
+        print(name)
+
+        y = librosa.load(in_loc+mood+"/"+name, mono=True, sr=44100)[0]
+
+    else:
+        y = librosa.load(name, mono=True, sr=44100)[0]   #name is just argument, it is actually fd in this case
+
     s = np.abs(librosa.stft(y))
     # The STFT function returns a matrix D[...,f,t], represents the frequency bin f at frame t of the
     # signal.
@@ -47,29 +57,40 @@ def audio_to_image(name, mood):
     # ax.set_title(name + " Frequency chart, scaled to decible values.")
     # fig.colorbar(img, ax=ax, format="%+2.0f dB")b
     plt.axis("off")
-    fig.savefig(
-        out_loc + mood + "/" + name + ".png",
-        bbox_inches="tight",
-        transparent=True,
-        pad_inches=0,
-        dpi=150
-    )
-    # plt.show()
+
+    if not predicting:
+        fig.savefig(
+            out_loc + mood + "/" + name + ".png",
+            bbox_inches="tight",
+            transparent=True,
+            pad_inches=0,
+            dpi=150
+        )
+
+        # just for debugging
+    else:
+        img = io.BytesIO()
+        fig.savefig(img, format="png")
+        img.seek(0)
+        return img
 
     plt.close(fig)                  #THIS LINE IS IMPORTANT
     # need to close the figure manually. Other wise memory usage increases.
     # del doesnt help, neither does gc.collect()
     return None
 
-if not os.path.exists(out_loc):
-    os.mkdir(out_loc)
+if __name__ == "__main__":
+    in_loc = "Files/Moods and Moments/"
+    out_loc = "OutputFiles/Moods and Moments/"
+    if not os.path.exists(out_loc):
+        os.mkdir(out_loc)
 
-for i in os.listdir(in_loc):
-    PATH = in_loc+"/"+i
-    print(PATH)
-    print("\n\n\n")
-    if not os.path.exists(out_loc+i):
-        os.mkdir(out_loc + i)
+    for i in os.listdir(in_loc):
+        PATH = in_loc+"/"+i
+        print(PATH)
+        print("\n\n\n")
+        if not os.path.exists(out_loc+i):
+            os.mkdir(out_loc + i)
 
-    for j in os.listdir(PATH):
-        audio_to_image(j, i)
+        for j in os.listdir(PATH):
+            audio_to_image(j, i)
