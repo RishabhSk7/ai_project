@@ -5,6 +5,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import confusion_matrix
+from sklearn.preprocessing import StandardScaler #apparently MLP is sensitive to scaling, so this helps
 import joblib
 import matplotlib.pyplot as plt
 
@@ -46,6 +47,15 @@ def generate_model(input, out):
     solver="sgd", alpha=0.001, hidden_layer_sizes=(20,50), random_state=42
 )
 
+    # scaling
+    #NOTE I am stupid, should have used it earlier
+    #accuracy jumped from 0.17 to 0.79
+    scaler = StandardScaler()
+    scaler.fit(X_train)
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
+    #consider using pipeline for scaling
+
     # fit the model with data
     model.fit(X_train, y_train)
 
@@ -67,10 +77,12 @@ def generate_model(input, out):
     # Calculate accuracy
     test_accuracy = accuracy_score(y_test, y_pred)
 
-    print(train_accuracy, test_accuracy)
+    del model.loss_curve_
     joblib.dump(model, "NeuralNetwork/NN.pkl", compress=3)
+
+    return train_accuracy, test_accuracy
 
 
 if __name__ == "__main__":
     x, y = load_data()
-    generate_model(x, y)
+    print(generate_model(x, y))
